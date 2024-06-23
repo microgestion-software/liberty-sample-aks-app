@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="liberty-sample-aks-app">
+
+    <featureManager>
+        <feature>microProfile-6.1</feature>
+    </featureManager>
+    
+    <variable name="http.port" defaultValue="9080" />
+    <variable name="https.port" defaultValue="9443" />
+    <variable name="hello_messages_02" defaultValue="Hello Message from server.xml" />
+
+    <httpEndpoint host="*" httpPort="${http.port}"
+        httpsPort="${https.port}" id="defaultHttpEndpoint" />
+
+    <webApplication location="liberty-sample-aks-app.war" contextRoot="/liberty-sample-aks-app">
+        <classloader apiTypeVisibility="+third-party" />
+        <appProperties>
+            <property name="hello_messages_03" value="Hello Message from server.xml (webApplication)."/>
+       </appProperties>
+    </webApplication>
+    <mpMetrics authentication="false"/>
+</server>

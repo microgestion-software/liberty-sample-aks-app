@@ -1,0 +1,60 @@
+apiVersion: apps.openliberty.io/v1
+kind: OpenLibertyApplication
+metadata:
+  name: liberty-sample-aks-app
+  labels:
+    name: liberty-sample-aks-app
+spec:
+  applicationImage: liberty-sample-aks-app:1.0-SNAPSHOT
+  service:
+    port: 9443
+  expose: true
+  route:
+    pathType: ImplementationSpecific
+  env:
+    - name: WLP_LOGGING_MESSAGE_FORMAT
+      value: "json"
+    - name: WLP_LOGGING_MESSAGE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+    - name: hello_messages_04
+      value: "Hello Message from K8S Deployment (OpenLibertyApplication)"
+    - name: hello_messages_05
+      valueFrom:
+        configMapKeyRef:
+          name: liberty-sample-aks-app-config
+          key: hello_message
+  resources:
+    requests:
+      cpu: 200m
+      memory: 64M
+    limits:
+      cpu: 400m
+      memory: 512M
+  probes:
+    startup:
+      failureThreshold: 12
+      httpGet:
+        path: /health/started
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10
+    liveness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/live
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10
+    readiness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/ready
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10

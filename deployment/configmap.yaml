@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liberty-sample-aks-app-config
+data:
+  hello_message: "Hello Message from K8S ConfigMap"
